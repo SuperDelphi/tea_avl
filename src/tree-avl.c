@@ -216,6 +216,6 @@ int tree_sort(void *array,
     return true;
 }
 
-
+//Fonctions ajoutées pour le TEA.
 
 
