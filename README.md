@@ -1,11 +1,11 @@
 # tea_avl
 
-### Membre du groupe
+## Group members
+
 - SuperDelphi
 - Loukas35
 - WassimBKL
 - ValB23
-
 
 ## Installing in Linux/WSL
 
