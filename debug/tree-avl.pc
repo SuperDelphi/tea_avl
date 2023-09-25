@@ -1,0 +1,14 @@
+prefix=/home/delphi/dev/tea_avl/tmp
+bindir=${prefix}/bin
+staticlibdir=${prefix}/lib
+sharedlibdir=${prefix}/lib
+includedir=${prefix}/include
+
+Version: 
+
+Name: tree
+Description: List library
+
+Requires:
+Libs: -L${bindir} -L${staticlibdir} -L${sharedlibdir} -ltree
+Cflags: -I${includedir}

@@ -1,0 +1,9 @@
+/home/delphi/dev/tea_avl/debug/CMakeFiles/tree-avl.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/test-tree-avl.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/test.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/edit_cache.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/rebuild_cache.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/list_install_components.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/install.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/install/local.dir
+/home/delphi/dev/tea_avl/debug/CMakeFiles/install/strip.dir
