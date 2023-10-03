@@ -20,11 +20,14 @@ void tree_delete(Tree tree, void (*delete)(void *)) {
 
 Tree
 tree_create(const void *data, size_t size) {
-    Tree tree = (Tree) malloc(2 * sizeof(Tree) + size);
+    Tree tree = (Tree) malloc(3 * sizeof(Tree) + size + sizeof(size_t));
+
     if (tree) {
         tree->left = NULL;
         tree->right = NULL;
+        tree->parent = NULL;
         memcpy(tree->data, data, size);
+        tree->balance = 0;
     }
 
     return tree;
@@ -217,5 +220,3 @@ int tree_sort(void *array,
 }
 
 //Fonctions ajoutées pour le TEA.
-
-

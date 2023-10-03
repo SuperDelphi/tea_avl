@@ -30,14 +30,14 @@ void testArbresBinaires(void){
     tree_set_right(fils1, fils2fils1);
 
     printf("Tri pre-order : \n");
-   // tree_pre_order(racine, monPrintF, NULL);
+    tree_pre_order(racine, monPrintF, NULL);
 
     printf("\nTri post-order : \n");
-    // tree_post_order(racine, monPrintF, NULL);
+    tree_post_order(racine, monPrintF, NULL);
 
     printf("\nTri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
-    
+
     // Les données sont sur le stack (variables locales i, j, k, m).
     // Pas besoin d'appeler free donc pointeur nul.
     tree_delete(racine, 0);
