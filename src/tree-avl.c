@@ -219,4 +219,17 @@ int tree_sort(void *array,
     return true;
 }
 
-//Fonctions ajoutées pour le TEA.
+// Fonctions ajoutées pour le TEA.
+void rotation_left_delphi(Tree tree) {
+    if (tree->right != NULL) {
+        tree->left = tree;
+        tree = tree->right;
+    }
+}
+
+void rotation_right_delphi(Tree tree) {
+    if (tree->left != NULL) {
+        tree->right = tree;
+        tree = tree->left;
+    }
+}

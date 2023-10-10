@@ -16,9 +16,7 @@ struct _TreeNode {
 
 Tree tree_new();
 
-void tree_delete(Tree tree, void (*
-
-delete) (void *));
+void tree_delete(Tree tree, void (*delete) (void *));
 
 Tree tree_create(const void *data, size_t size);
 
