@@ -18,8 +18,7 @@ void tree_delete(Tree tree, void (*delete)(void *)) {
     }
 }
 
-Tree
-tree_create(const void *data, size_t size) {
+Tree tree_create(const void *data, size_t size) {
     Tree tree = (Tree) malloc(3 * sizeof(Tree) + size + sizeof(size_t));
 
     if (tree) {
@@ -33,32 +32,28 @@ tree_create(const void *data, size_t size) {
     return tree;
 }
 
-Tree
-tree_get_left(Tree tree) {
+Tree tree_get_left(Tree tree) {
     if (tree)
         return tree->left;
     else
         return NULL;
 }
 
-Tree
-tree_get_right(Tree tree) {
+Tree tree_get_right(Tree tree) {
     if (tree)
         return tree->right;
     else
         return NULL;
 }
 
-void *
-tree_get_data(Tree tree) {
+void *tree_get_data(Tree tree) {
     if (tree)
         return tree->data;
     else
         return NULL;
 }
 
-bool
-tree_set_left(Tree tree, Tree left) {
+bool tree_set_left(Tree tree, Tree left) {
     if (tree) {
         tree->left = left;
         return true;
@@ -74,8 +69,7 @@ bool tree_set_right(Tree tree, Tree right) {
         return false;
 }
 
-bool
-tree_set_data(Tree tree, const void *data, size_t
+bool tree_set_data(Tree tree, const void *data, size_t
 size) {
     if (tree) {
         memcpy(tree->data, data, size);
@@ -84,8 +78,7 @@ size) {
         return false;
 }
 
-void
-tree_pre_order(Tree tree,
+void tree_pre_order(Tree tree,
                void (*func)(void *, void *),
                void *extra_data) {
     if (tree) {
@@ -95,8 +88,7 @@ tree_pre_order(Tree tree,
     }
 }
 
-void
-tree_in_order(Tree tree,
+void tree_in_order(Tree tree,
               void (*func)(void *, void *),
               void *extra_data) {
     if (tree) {
@@ -106,8 +98,7 @@ tree_in_order(Tree tree,
     }
 }
 
-void
-tree_post_order(Tree tree,
+void tree_post_order(Tree tree,
                 void (*func)(void *, void *),
                 void *extra_data) {
     if (tree) {
@@ -117,8 +108,7 @@ tree_post_order(Tree tree,
     }
 }
 
-size_t
-tree_height(Tree tree) {
+size_t tree_height(Tree tree) {
     if (tree)
         return 1 + MAX (tree_height(tree->left),
                         tree_height(tree->right));
@@ -126,8 +116,7 @@ tree_height(Tree tree) {
         return 0;
 }
 
-size_t
-tree_size(Tree tree) {
+size_t tree_size(Tree tree) {
     if (tree)
         return 1 + tree_size(tree->left) + tree_size
                 (tree->right);
@@ -160,8 +149,7 @@ bool tree_insert_sorted(Tree *ptree,
 
 }
 
-void *
-tree_search(Tree tree,
+void *tree_search(Tree tree,
             const void *data,
             int (*compare)(const void *, const void
             *)) {
