@@ -38,15 +38,17 @@ void testArbresBinaires(void){
     printf("\nTri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
 
+    printf("\nRotation gauche...\n");
+    rotation_left_delphi(&racine);
+    printf("\nNouveau tri in-order : \n");
+    tree_pre_order(racine, monPrintF, NULL);
+
     // Les données sont sur le stack (variables locales i, j, k, m).
     // Pas besoin d'appeler free donc pointeur nul.
     tree_delete(racine, 0);
 }
 
-
-
 int main(){
-
     testArbresBinaires();
 
     return EXIT_SUCCESS;

@@ -65,4 +65,8 @@ int tree_sort(void *array,
               int (*compare)(const void *, const void
               *));
 
+// TESTS
+
+void rotation_left_delphi(Tree *tree);
+
 #endif

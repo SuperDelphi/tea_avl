@@ -66,8 +66,7 @@ tree_set_left(Tree tree, Tree left) {
         return false;
 }
 
-bool
-tree_set_right(Tree tree, Tree right) {
+bool tree_set_right(Tree tree, Tree right) {
     if (tree) {
         tree->right = right;
         return true;
@@ -220,16 +219,19 @@ int tree_sort(void *array,
 }
 
 // Fonctions ajoutées pour le TEA.
-void rotation_left_delphi(Tree tree) {
-    if (tree->right != NULL) {
-        tree->left = tree;
-        tree = tree->right;
+void rotation_left_delphi(Tree *tree) {
+    if ((*tree)->right != NULL) {
+        (*tree)->left = (*tree);
+        (*tree)->left->parent = (*tree)->right;
+        (*tree)->right->parent = (*tree)->parent;
+//        (*tree)->right->left = (*tree)->left;
+        (*tree) = (*tree)->right;
     }
 }
 
-void rotation_right_delphi(Tree tree) {
-    if (tree->left != NULL) {
-        tree->right = tree;
-        tree = tree->left;
-    }
+void rotation_right_delphi(Tree *tree) {
+//    if (tree->left != NULL) {
+//        tree->right = tree;
+//        tree = tree->left;
+//    }
 }
