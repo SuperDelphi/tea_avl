@@ -1,0 +1,371 @@
+#include <string.h>
+#include "tree-br.h"
+#include <stdbool.h>
+#include "min-max.h"
+#include <stdlib.h>
+
+/*--------------------------------------------------------------------*/
+Tree tree_new() {
+    return NULL;
+}
+
+void tree_delete(Tree tree, void (*delete)(void *)) {
+    if (tree) {
+        tree_delete(tree->left, delete);
+        tree_delete(tree->right, delete);
+        if (delete)
+            delete(tree->data);
+        free(tree);
+    }
+}
+
+Tree tree_create(const void *data, size_t size) {
+    Tree tree = (Tree) malloc(3 * sizeof(Tree) + size + sizeof(size_t));
+
+    if (tree) {
+        tree->left = NULL;
+        tree->right = NULL;
+        tree->parent = NULL;
+        tree->color = Red;
+        memcpy(tree->data, data, size);
+    }
+    return tree;
+}
+
+Tree tree_get_left(Tree tree) {
+    if (tree)
+        return tree->left;
+    else
+        return NULL;
+}
+
+Tree tree_get_right(Tree tree) {
+    if (tree)
+        return tree->right;
+    else
+        return NULL;
+}
+
+void *tree_get_data(Tree tree) {
+    if (tree)
+        return tree->data;
+    else
+        return NULL;
+}
+
+bool tree_set_left(Tree tree, Tree left) {
+    if (tree) {
+        tree->left = left;
+        return true;
+    } else
+        return false;
+}
+
+bool tree_set_right(Tree tree, Tree right) {
+    if (tree) {
+        tree->right = right;
+        return true;
+    } else
+        return false;
+}
+
+bool tree_set_data(Tree tree, const void *data, size_t
+size) {
+    if (tree) {
+        memcpy(tree->data, data, size);
+        return true;
+    } else
+        return false;
+}
+
+void tree_pre_order(Tree tree,
+               void (*func)(void *, void *),
+               void *extra_data) {
+    if (tree) {
+        func(tree->data, extra_data);
+        tree_pre_order(tree->left, func, extra_data);
+        tree_pre_order(tree->right, func, extra_data);
+    }
+}
+
+void tree_in_order(Tree tree,
+              void (*func)(void *, void *),
+              void *extra_data) {
+    if (tree) {
+        tree_in_order(tree->left, func, extra_data);
+        func(tree->data, extra_data);
+        tree_in_order(tree->right, func, extra_data);
+    }
+}
+
+void tree_post_order(Tree tree,
+                void (*func)(void *, void *),
+                void *extra_data) {
+    if (tree) {
+        tree_post_order(tree->left, func, extra_data);
+        tree_post_order(tree->right, func, extra_data);
+        func(tree->data, extra_data);
+    }
+}
+
+size_t tree_height(Tree tree) {
+    if (tree)
+        return 1 + MAX (tree_height(tree->left),
+                        tree_height(tree->right));
+    else
+        return 0;
+}
+
+size_t tree_size(Tree tree) {
+    if (tree)
+        return 1 + tree_size(tree->left) + tree_size
+                (tree->right);
+    else
+        return 0;
+}
+
+bool tree_insert_sorted(Tree *ptree,
+                   const void *data,
+                   size_t size,
+                   int (*compare)(const void *, const
+                   void *)) {
+    if (*ptree) {
+        switch (compare(data, (*ptree)->data)) {
+            case -1:
+                return tree_insert_sorted(&(*ptree)->left,
+                                          data, size, compare);
+            default:
+                return tree_insert_sorted(&(*ptree)->right,
+                                          data, size, compare);
+        }
+    } else {
+        Tree new = tree_create(data, size);
+        if (new) {
+            *ptree = new;
+            return true;
+        } else
+            return false;
+    }
+
+}
+
+void *tree_search(Tree tree,
+            const void *data,
+            int (*compare)(const void *, const void
+            *)) {
+    if (tree) {
+        switch (compare(data, tree->data)) {
+            case -1:
+                return tree_search(tree->left, data, compare);
+            case 0:
+                return tree->data;
+            case 1:
+                return tree_search(tree->right, data, compare);
+            default:
+                return NULL; // RAJOUTE PARCE QUE WARNING !!!
+        }
+    } else
+        return NULL;
+}
+
+static void set(void *data, void *array) {
+    static size_t size;
+    static size_t offset;
+
+    if (data) {
+        memcpy(array + offset, data, size);
+        offset += size;
+    } else {
+        offset = 0;
+        size = *(size_t *) array;
+    }
+}
+
+int tree_sort(void *array,
+          size_t length,
+          size_t size,
+          int (*compare)(const void *, const void *)) {
+    size_t i;
+    Tree tree = tree_new();
+    void *pointer;
+
+    pointer = array;
+    for (i = 0; i < length; i++) {
+        if (tree_insert_sorted(&tree, pointer, size, compare))
+            pointer += size;
+        else {
+            tree_delete(tree, NULL);
+            return false;
+        }
+    }
+
+    set(NULL, &size);
+    tree_in_order(tree, set, array);
+    tree_delete(tree, NULL);
+
+    return true;
+}
+
+//Fonctions ajoutées pour le TEA.
+
+
+Tree rotate_right_left(Tree node) {
+    if (!node) {
+        return node;
+    }
+
+    // Rotation droite (droite-droite) sur le sous-arbre droit.
+    if (node->right) {
+        node->right = rotate_right(node->right);
+    }
+
+    // Rotation gauche (gauche-gauche) sur le nœud d'origine.
+    return rotate_left(node);
+}
+Tree rotate_left_right(Tree node) {
+    if (!node) {
+        return node;
+    }
+
+    // Rotation gauche (gauche-gauche) sur le sous-arbre gauche.
+    if (node->left) {
+        node->left = rotate_left(node->left);
+    }
+
+    // Rotation droite (droite-droite) sur le nœud d'origine.
+    return rotate_right(node);
+}
+
+Tree tree_get_parent(Tree tree){
+    if (tree)
+        return tree->parent;
+    else
+        return NULL;
+}
+
+Tree tree_get_grandparent(Tree tree){
+    if ((tree != NULL) && (tree->parent != NULL))
+        return tree->parent->parent;
+    else
+        return NULL;
+}
+
+Tree tree_get_uncle(Tree tree){
+    Tree grandparent = tree_get_grandparent(tree);
+    if (grandparent == NULL)
+        return NULL;
+    if (tree->parent == grandparent->left){
+        return grandparent->right;
+    }else{
+        return grandparent->left;
+    }
+}
+
+Tree tree_get_father(Tree tree)
+{
+    if (tree)
+        return tree->parent;
+    else
+        return NULL;
+}
+
+bool tree_set_father (Tree tree, Tree parent)
+{
+    if (tree)
+    {
+        tree->parent = parent;
+        return true;
+    }
+    else
+        return false;
+}
+
+//Insert and it's many cases
+
+void insert(Tree tree, const void * data){
+
+    if ((*(int*)data) < *(int*)tree_get_data(tree)){
+
+        if (tree_get_left(tree) == NULL){
+            Tree leftTree = tree_create(data, sizeof(data));
+
+            tree_set_left(tree, leftTree);
+            tree_set_parent(leftTree, tree);
+
+            insert_case1(leftTree);
+        }
+        else{
+            insert(tree_get_left(tree), data);
+        }
+    }
+    else{
+        if (tree_get_right(tree) == NULL){
+            Tree rightTree = tree_create(data, sizeof(data));
+
+            tree_set_right(tree, rightTree);
+            tree_set_parent(rightTree, tree);
+
+            insert_case1(rightTree);
+        }
+        else{
+            insert(tree_get_right(tree), data);
+        }
+    }
+}
+
+void insert_case1(Tree ptree){
+    if(ptree->parent == NULL)
+        ptree->color = Black;
+    else
+        insert_case2(ptree);
+}
+
+void insert_case2(Tree ptree){
+    if((ptree)->parent->color == Black)
+        return;
+    else
+        insert_case3(ptree);
+}
+
+void insert_case3(Tree ptree){
+    Tree uncle = tree_get_uncle(ptree);
+    Tree grandparent;
+
+    if((uncle != NULL) && (uncle->color == Red)){
+        ptree->parent->color = Black;
+        uncle->color = Black;
+        grandparent = tree_get_grandparent(ptree);
+        grandparent->color = Red;
+        insert_case1(grandparent);
+    }
+    else
+        insert_case4(ptree);
+}
+
+void insert_case4(Tree ptree){
+    Tree grandparent =tree_get_grandparent(ptree);
+
+    if((ptree == (ptree)->parent->right) && ((ptree)->parent == grandparent->left)){
+        rotate_left((ptree)->parent);
+        ptree = (ptree)->left;
+    }
+    else if((ptree == (ptree)->parent->left) && ((ptree)->parent == grandparent->right)){
+        rotate_right((ptree)->parent);
+        ptree = (ptree)->right;
+    }
+    insert_case5(ptree);
+}
+
+void insert_case5(Tree ptree){
+    Tree grandparent = tree_get_grandparent(ptree);
+
+    (ptree)->parent->color = Black;
+    grandparent->color = Red;
+    if((ptree == (ptree)->parent->left) && ((ptree)->parent == grandparent->left)){
+        rotate_right(grandparent);
+    }
+    else{
+        rotate_left(grandparent);
+    }
+
+}
