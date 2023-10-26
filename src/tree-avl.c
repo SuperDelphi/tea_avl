@@ -273,6 +273,18 @@ void rotation_right(Tree tree) {
 ////        tree = tree->left;
 ////    }
 //}
+Tree tree_min(Tree tree) {
+    if (tree == NULL) {
+        return NULL;
+    }
+
+    while (tree->left != NULL) {
+        tree = tree->left;
+    }
+
+    return tree;
+}
+
 static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *), void (*delete)(void *)) {
     Tree tree = *ptree;
 
@@ -284,7 +296,7 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
 
     if (C < 0) {
         tree->left = _tree_remove(&tree->left, data, size, compare, delete);
-    } else if (C > 0) {
+    } else if (cmp_result > 0) {
         tree->right = _tree_remove(&tree->right, data, size, compare, delete);
     } else {
         // Le nœud à supprimer a été trouvé
@@ -294,22 +306,19 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
                 delete(tree->data);
             }
             free(tree);
-            return temp;
+            tree = temp;
         } else if (tree->right == NULL) {
             Tree temp = tree->left;
             if (delete) {
                 delete(tree->data);
             }
             free(tree);
-            return temp;
+            tree = temp;
         } else {
             // Cas où le nœud a deux sous-arbres
-            // Trouver le nœud minimal du sous-arbre droit
-            Tree min_right = tree_search(tree->right, data, compare);
-            // Copier la valeur du nœud minimal dans le nœud à supprimer
-            memcpy(tree->data, min_right->data, size);
-            // Supprimer le nœud minimal du sous-arbre droit
-            tree->right = _tree_remove(&tree->right, min_right->data, size, compare, delete);
+            Tree temp = tree_min(tree->right); // Trouver le nœud successeur
+            memcpy(tree->data, temp->data, size);
+            tree->right = _tree_remove(&tree->right, temp->data, size, compare, delete);
         }
     }
 
@@ -344,4 +353,5 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
 
     return tree;
 }
+
 
