@@ -6,11 +6,17 @@
 
 typedef struct _TreeNode *Tree;
 
+typedef enum{
+    Red = 0,
+    Black = 1
+} Color;
+
 struct _TreeNode {
     Tree left;
     Tree right;
+    Tree parent;
+    Color color;
     char data[1];
-    size_t balance;
 };
 
 Tree tree_new();
@@ -65,7 +71,25 @@ int tree_sort(void *array,
               *));
 
 // TESTS
+void rotate_left(Tree *tree);
+void rotate_right(Tree *tree);
 
-void rotation_left_delphi(Tree *tree);
+void tree_get_parent(Tree tree);
+Tree tree_get_uncle (Tree tree);
+Tree tree_get_grandparent (Tree tree);
+Tree tree_get_root (Tree tree);
+
+
+void insert_case1 (Tree ptree);
+void insert_case2 (Tree ptree);
+void insert_case3 (Tree ptree);
+void insert_case4 (Tree ptree);
+void insert_case5 (Tree ptree);
+
+Tree tree_find_min(Tree tree);
+Tree tree_find_max(Tree tree);
+
+void * delete(Tree tree);
+
 
 #endif
