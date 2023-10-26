@@ -24,7 +24,6 @@ Tree tree_create(const void *data, size_t size) {
     if (tree) {
         tree->left = NULL;
         tree->right = NULL;
-        tree->parent = NULL;
         memcpy(tree->data, data, size);
         tree->balance = 0;
     }
@@ -207,47 +206,70 @@ int tree_sort(void *array,
 }
 
 // Fonctions ajoutées pour le TEA.
-void rotation_left_delphi(Tree *tree) {
-    if ((*tree)->right != NULL) {
-        (*tree)->left = (*tree);
-        (*tree)->left->parent = (*tree)->right;
-        (*tree)->right->parent = (*tree)->parent;
-//        (*tree)->right->left = (*tree)->left;
-        (*tree) = (*tree)->right;
-    }
+
+void rotation_left(Tree tree) {
+    Tree newParent = tree->left;
+    Tree children = newParent->right;
+
+    newParent->right = tree;
+    tree->left = children;
+
+    tree->balance = tree_height(tree->left) - tree_height(tree->right);
+    newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
 
-Tree rotate_right_left(Tree node) {
-    if (!node) {
-        return node;
-    }
+void rotation_right(Tree tree) {
+    Tree newParent = tree->right;
+    Tree children = newParent->left;
 
-    // Rotation droite (droite-droite) sur le sous-arbre droit.
-    if (node->right) {
-        node->right = rotate_right(node->right);
-    }
+    newParent->left = tree;
+    tree->right = children;
 
-    // Rotation gauche (gauche-gauche) sur le nœud d'origine.
-    return rotate_left(node);
-}
-Tree rotate_left_right(Tree node) {
-    if (!node) {
-        return node;
-    }
-
-    // Rotation gauche (gauche-gauche) sur le sous-arbre gauche.
-    if (node->left) {
-        node->left = rotate_left(node->left);
-    }
-
-    // Rotation droite (droite-droite) sur le nœud d'origine.
-    return rotate_right(node);
+    tree->balance = tree_height(tree->left) - tree_height(tree->right);
+    newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
 
-
-void rotation_right_delphi(Tree *tree) {
-//    if (tree->left != NULL) {
-//        tree->right = tree;
-//        tree = tree->left;
+//void rotation_left_delphi(Tree *tree) {
+//    if ((*tree)->right != NULL) {
+//        (*tree)->left = (*tree);
+//        (*tree)->left->parent = (*tree)->right;
+//        (*tree)->right->parent = (*tree)->parent;
+////        (*tree)->right->left = (*tree)->left;
+//        (*tree) = (*tree)->right;
 //    }
-}
+//}
+//
+//Tree rotate_right_left(Tree node) {
+//    if (!node) {
+//        return node;
+//    }
+//
+//    // Rotation droite (droite-droite) sur le sous-arbre droit.
+//    if (node->right) {
+//        node->right = rotate_right(node->right);
+//    }
+//
+//    // Rotation gauche (gauche-gauche) sur le nœud d'origine.
+//    return rotate_left(node);
+//}
+//Tree rotate_left_right(Tree node) {
+//    if (!node) {
+//        return node;
+//    }
+//
+//    // Rotation gauche (gauche-gauche) sur le sous-arbre gauche.
+//    if (node->left) {
+//        node->left = rotate_left(node->left);
+//    }
+//
+//    // Rotation droite (droite-droite) sur le nœud d'origine.
+//    return rotate_right(node);
+//}
+//
+//
+//void rotation_right_delphi(Tree *tree) {
+////    if (tree->left != NULL) {
+////        tree->right = tree;
+////        tree = tree->left;
+////    }
+//}
