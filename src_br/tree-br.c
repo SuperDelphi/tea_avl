@@ -209,30 +209,30 @@ int tree_sort(void *array,
 //Fonctions ajoutées pour le TEA.
 
 
-Tree rotate_right_left(Tree node) {
+Tree rotate_left(Tree node) {
     if (!node) {
         return node;
     }
 
-    // Rotation droite (droite-droite) sur le sous-arbre droit.
+    // Rotate right on the right subtree.
     if (node->right) {
-        node->right = rotate_right(node->right);
+        node->right = rotate_right(&node->right);
     }
 
-    // Rotation gauche (gauche-gauche) sur le nœud d'origine.
-    return rotate_left(node);
+    // Rotate left on the original node.
+    return rotate_left(&node);
 }
-Tree rotate_left_right(Tree node) {
+Tree rotate_right(Tree node) {
     if (!node) {
         return node;
     }
 
-    // Rotation gauche (gauche-gauche) sur le sous-arbre gauche.
+    // Rotate left on the left subtree.
     if (node->left) {
-        node->left = rotate_left(node->left);
+        node->left = rotate_left(&node->left);
     }
 
-    // Rotation droite (droite-droite) sur le nœud d'origine.
+    // Rotate right on the original node.
     return rotate_right(node);
 }
 
@@ -278,6 +278,14 @@ bool tree_set_father (Tree tree, Tree parent)
     }
     else
         return false;
+}
+
+Tree tree_get_root(Tree tree){
+    if(tree_get_father(tree) == NULL){
+        return tree;
+    }else{
+        return tree_get_root(tree_get_father(tree));
+    }
 }
 
 //Insert and it's many cases
@@ -368,4 +376,80 @@ void insert_case5(Tree ptree){
         rotate_left(grandparent);
     }
 
+}
+
+//Delete
+
+Tree tree_find_min(Tree tree){
+    if (tree == NULL)
+        return NULL;
+    if (tree_get_left(tree) == NULL)
+        return tree;
+    else
+        return tree_find_min(tree_get_left(tree));
+}
+
+Tree tree_find_max(Tree tree){
+    if (tree == NULL)
+        return NULL;
+    if (tree_get_right(tree) == NULL)
+        return tree;
+    else
+        return tree_find_max(tree_get_right(tree));
+}
+
+void * delete(Tree tree){
+    if (tree == NULL)
+        return NULL;
+    //Check if it's a node.
+    if (tree_get_left(tree) == NULL && tree_get_right(tree) == NULL){
+        //Check if it's not the root
+        if (tree_get_father(tree) != NULL){
+            if (tree_get_father(tree)->left == tree){
+                tree_set_left(tree_get_father(tree), NULL);
+            }
+            else{
+                tree_set_right(tree_get_father(tree), NULL);
+            }
+        }
+        //Delete node
+        tree_delete(tree, 0);
+        return NULL;
+
+        //Check if node has a right child
+    }else if (tree_get_left(tree) == NULL){
+        //Check if it's not root
+        if (tree_get_father(tree) != NULL){
+            if (tree_get_father(tree)->left == tree){
+                tree_set_left(tree_get_father(tree), tree_get_right(tree));
+            }else{
+                tree_set_right(tree_get_father(tree), tree_get_right(tree));
+            }
+        }
+        //Delete node
+        tree_delete(tree, 0);
+        return NULL;
+
+    }else if (tree_get_right(tree) == NULL){
+        if (tree_get_father(tree) != NULL){
+            if (tree_get_father(tree)->left == tree){
+                tree_set_left(tree_get_father(tree), tree_get_left(tree));
+            }
+            else{
+                tree_set_right(tree_get_father(tree), tree_get_left(tree));
+            }
+        }
+
+        tree_delete(tree, 0);
+        return NULL;
+
+    }else{
+        Tree min = tree_find_min(tree_get_right(tree));
+        void * data = tree_get_data(tree);
+
+        tree_set_data(tree, tree_get_data(min), sizeof(int));
+        tree_set_data(min, data, sizeof(int));
+
+        return supprimer(min);
+    }
 }
