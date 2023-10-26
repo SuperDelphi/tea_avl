@@ -5,55 +5,49 @@
 #include "tree-br.h"
 
 void monPrintF (void * a, void * b){
-    printf("Valeur du noeud : %d\n", *(int*)a);
+    printf("Node value : %d\n", *(int*)a);
 }
 
 /**
- * Test réalisés pour les arbres binaires
- * Affichage des résultats des tris
+ * Tests for the Red and Black tree.
+ * Displaying creation, deletion and sorting of red and black tree.
  */
-void testArbresBinaires(void){
-    int i = 5, j = 10, k = 15, m = 20;
+void testRedBlackTree(void){
+    int i = 10, j = 85, k = 15, m = 70, n = 20, o = 60, p = 30, q = 50, r = 65, s = 80, t = 90, u = 40, v = 5, w = 55;
     size_t sizeInt = sizeof(int);
 
-    Tree racine = tree_create(&i, sizeInt);
-    Tree fils1 = tree_create(&j, sizeInt);
-    Tree fils2 = tree_create(&k, sizeInt);
+    printf("\n-----Creation of the tree-----\n\n");
 
-    tree_set_left(racine, fils1);
-    tree_set_right(racine, fils2);
+    Tree root = tree_create(&i, sizeInt);
+    insert_case1(root);
+    insert(tree_get_root(root), &j);
+    insert(tree_get_root(root), &k);
+    insert(tree_get_root(root), &m);
+    insert(tree_get_root(root), &n);
+    insert(tree_get_root(root), &o);
+    insert(tree_get_root(root), &p);
+    insert(tree_get_root(root), &q);
+    insert(tree_get_root(root), &r);
+    insert(tree_get_root(root), &s);
+    insert(tree_get_root(root), &t);
+    insert(tree_get_root(root), &u);
+    insert(tree_get_root(root), &v);
+    insert(tree_get_root(root), &w);
 
-    Tree fils1fils1 = tree_create(&m, sizeInt);
-    Tree fils2fils1 = tree_create(&i, sizeInt);
-
-    tree_set_left(fils1, fils1fils1);
-    tree_set_right(fils1, fils2fils1);
-
-    /*printf("Tri pre-order : \n");
-    tree_pre_order(racine, monPrintF, NULL);
+    printf("Tri pre-order : \n");
+    tree_pre_order(root, monPrintF, NULL);
 
     printf("\nTri post-order : \n");
-    tree_post_order(racine, monPrintF, NULL);*/
+    tree_post_order(root, monPrintF, NULL);
 
     printf("\nTri in-order : \n");
-    tree_in_order(racine, monPrintF, NULL);
+    tree_in_order(root, monPrintF, NULL);
 
-    rotation_left(&fils2);
-    printf("\nTri in-order avec rotate: \n");
-    tree_in_order(racine, monPrintF, NULL);
-
-    printf("\nRotation gauche...\n");
-    rotation_left_delphi(&racine);
-    printf("\nNouveau tri in-order : \n");
-    tree_pre_order(racine, monPrintF, NULL);
-
-    // Les données sont sur le stack (variables locales i, j, k, m).
-    // Pas besoin d'appeler free donc pointeur nul.
     tree_delete(racine, 0);
 }
 
 int main(){
-    testArbresBinaires();
+    testRedBlackTree();
 
     return EXIT_SUCCESS;
 }
