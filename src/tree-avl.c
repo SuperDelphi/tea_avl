@@ -254,32 +254,6 @@ void rotation_right(Tree tree) {
     tree->balance = tree_height(tree->left) - tree_height(tree->right);
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
-// Fonction pour équilibrer un nœud
-void balance(Tree *ptree) {
-    int balance = tree_height((*ptree)->left) - tree_height((*ptree)->right);
-
-    if (balance > 1) {
-        // Déséquilibre à gauche
-        if (compare(data, (*ptree)->left->data) < 0) {
-            // Rotation simple à droite
-            *ptree = rotation_right(*ptree);
-        } else {
-            // Rotation double à gauche-droite
-            (*ptree)->left = rotation_left((*ptree)->left);
-            *ptree = rotation_right(*ptree);
-        }
-    } else if (balance < -1) {
-        // Déséquilibre à droite
-        if (compare(data, (*ptree)->right->data) > 0) {
-            // Rotation simple à gauche
-            *ptree = rotation_left(*ptree);
-        } else {
-            // Rotation double à droite-gauche
-            (*ptree)->right = rotation_right((*ptree)->right);
-            *ptree = rotation_left(*ptree);
-        }
-    }
-}
 
 // Fonction pour insérer un nœud
 Tree tree_insert(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *)) {
