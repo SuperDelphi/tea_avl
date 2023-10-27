@@ -306,7 +306,7 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
 
     if (C < 0) {
         tree->left = _tree_remove(&tree->left, data, size, compare, delete);
-    } else if (cmp_result > 0) {
+    } else if (C > 0) {
         tree->right = _tree_remove(&tree->right, data, size, compare, delete);
     } else {
         // Le nœud à supprimer a été trouvé
