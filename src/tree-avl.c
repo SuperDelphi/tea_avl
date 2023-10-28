@@ -343,6 +343,16 @@ Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(con
                 delete(tree->data);
             }
 
+            if (tree->parent) {
+                Tree parent = tree->parent;
+
+                if (compare(tree->data, parent->data) > 0) {
+                    parent->right = NULL;
+                } else {
+                    parent->left = NULL;
+                }
+            }
+
             free(tree);
             tree = temp;
         } else if (tree->right == NULL) {
@@ -350,6 +360,16 @@ Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(con
 
             if (delete) {
                 delete(tree->data);
+            }
+
+            if (tree->parent) {
+                Tree parent = tree->parent;
+
+                if (compare(tree->data, parent->data) > 0) {
+                    parent->right = NULL;
+                } else {
+                    parent->left = NULL;
+                }
             }
 
             free(tree);
