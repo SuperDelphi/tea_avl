@@ -156,13 +156,10 @@ void *tree_search(Tree tree,
     if (tree) {
         switch (compare(data, tree->data)) {
             case -1:
-                printf("\nGAUCHE...\n");
                 return tree_search(tree->left, data, compare);
             case 0:
-                printf("\nC'EST TOI...\n");
                 return tree->data;
             case 1:
-                printf("\nDROITE...\n");
                 return tree_search(tree->right, data, compare);
             default:
                 return NULL; // RAJOUTE PARCE QUE WARNING !!!
@@ -212,19 +209,19 @@ int tree_sort(void *array,
 
 // Fonctions ajoutées pour le TEA.
 
-int compare(const void *data1, const void *data2) {
-
-    int value1 = *((int *)data1);
-    int value2 = *((int *)data2);
-
-    if (value1 < value2) {
-        return -1;
-    } else if (value1 > value2) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
+//int compare(const void *data1, const void *data2) {
+//
+//    int value1 = *((int *)data1);
+//    int value2 = *((int *)data2);
+//
+//    if (value1 < value2) {
+//        return -1;
+//    } else if (value1 > value2) {
+//        return 1;
+//    } else {
+//        return 0;
+//    }
+//}
 
 void rotation_left(Tree tree) {
     Tree newParent = tree->left;

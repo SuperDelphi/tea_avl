@@ -30,7 +30,7 @@ void delete(void *data){
  * Test réalisés pour les arbres binaires
  * Affichage des résultats des tris
  */
-void testArbresAVL(void){
+void testArbresAVL(void) {
     int i = 5, j = 10, k = 15, m = 20, l = 25;
     size_t sizeInt = sizeof(int);
 
@@ -60,7 +60,7 @@ void testArbresAVL(void){
     tree_search(racine, &l, compare);
 
     printf("\nSuppression d'un fils\n");
-    _tree_remove(&fils2, &k, sizeInt, compare, delete);
+    _tree_remove(&fils2, &k, sizeInt, compare, NULL);
 
     printf("\nNouveau tri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
