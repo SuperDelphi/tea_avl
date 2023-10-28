@@ -31,7 +31,7 @@ void delete(void *data){
  * Affichage des résultats des tris
  */
 void testArbresAVL(void) {
-    int i = 5, j = 10, k = 15, m = 20, l = 25;
+    int i = 5, j = 3, k = 8, m = 1, l = 4, n = 9;
     size_t sizeInt = sizeof(int);
 
     Tree racine = tree_create(&i, sizeInt);
@@ -42,7 +42,7 @@ void testArbresAVL(void) {
     tree_set_right(racine, fils2);
 
     Tree fils1fils1 = tree_create(&m, sizeInt);
-    Tree fils2fils1 = tree_create(&i, sizeInt);
+    Tree fils2fils1 = tree_create(&l, sizeInt);
 
     tree_set_left(fils1, fils1fils1);
     tree_set_right(fils1, fils2fils1);
@@ -51,7 +51,7 @@ void testArbresAVL(void) {
     tree_in_order(racine, monPrintF, NULL);
 
     printf("\nAjout d'un nouveau fils\n");
-    tree_insert(&fils1fils1, &l, sizeInt, compare);
+    tree_insert(&fils2, &n, sizeInt, compare);
 
     printf("\nNouveau tri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
@@ -64,7 +64,6 @@ void testArbresAVL(void) {
 
     printf("\nNouveau tri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
-
 }
 
 int main(){
