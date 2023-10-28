@@ -1,8 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
 #include <string.h>
-#include "tree-avl.h"
 #include <stdbool.h>
+#include "tree-avl.h"
 #include "min-max.h"
-
 /*--------------------------------------------------------------------*/
 Tree tree_new() {
     return NULL;
@@ -76,6 +78,20 @@ size) {
     } else
         return false;
 }
+int compare(const void *data1, const void *data2) {
+    
+    int value1 = *((int *)data1);
+    int value2 = *((int *)data2);
+
+    if (value1 < value2) {
+        return -1;
+    } else if (value1 > value2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 
 void tree_pre_order(Tree tree,
                     void (*func)(void *, void *),
@@ -106,14 +122,14 @@ void tree_post_order(Tree tree,
         func(tree->data, extra_data);
     }
 }
-
-size_t tree_height(Tree tree) {
-    if (tree)
-        return 1 + MAX (tree_height(tree->left),
-                        tree_height(tree->right));
-    else
-        return 0;
+size_t tree_height(Tree tree){
+  if (tree)
+    return 1 + MAX(tree_height(tree->left), tree_height(tree->right));
+  else
+    return 0;
 }
+
+
 
 size_t tree_size(Tree tree) {
     if (tree)
@@ -206,33 +222,6 @@ int tree_sort(void *array,
 }
 
 // Fonctions ajoutées pour le TEA.
-// Fonction pour équilibrer un nœud
-void balance(Tree *ptree) {
-    int balance = tree_height((*ptree)->left) - tree_height((*ptree)->right);
-
-    if (balance > 1) {
-        // Déséquilibre à gauche
-        if (compare(data, (*ptree)->left->data) < 0) {
-            // Rotation simple à droite
-            *ptree = rotation_right(*ptree);
-        } else {
-            // Rotation double à gauche-droite
-            (*ptree)->left = rotation_left((*ptree)->left);
-            *ptree = rotation_right(*ptree);
-        }
-    } else if (balance < -1) {
-        // Déséquilibre à droite
-        if (compare(data, (*ptree)->right->data) > 0) {
-            // Rotation simple à gauche
-            *ptree = rotation_left(*ptree);
-        } else {
-            // Rotation double à droite-gauche
-            (*ptree)->right = rotation_right((*ptree)->right);
-            *ptree = rotation_left(*ptree);
-        }
-    }
-}
-
 void rotation_left(Tree tree) {
     Tree newParent = tree->left;
     Tree children = newParent->right;
@@ -253,6 +242,42 @@ void rotation_right(Tree tree) {
 
     tree->balance = tree_height(tree->left) - tree_height(tree->right);
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
+}
+// Fonction pour équilibrer un nœud
+// Déclarez 'data' dans la fonction 'balance'.
+
+
+
+
+
+// Fonction pour équilibrer un nœud
+void balance(Tree *ptree) {
+    if (*ptree) {
+        const void *data = (*ptree)->data; // Déclarer et initialiser data avec la valeur du nœud
+        int balance = tree_height((*ptree)->left) - tree_height((*ptree)->right);
+
+        if (balance > 1) {
+            // Déséquilibre à gauche
+            if (compare(data, (*ptree)->left->data) < 0) {
+                // Rotation simple à droite
+                rotation_right(ptree);
+            } else {
+                // Rotation double à gauche-droite
+                rotation_left(&(*ptree)->left);
+                rotation_right(ptree);
+            }
+        } else if (balance < -1) {
+            // Déséquilibre à droite
+            if (compare(data, (*ptree)->right->data) > 0) {
+                // Rotation simple à gauche
+                rotation_left(ptree);
+            } else {
+                // Rotation double à droite-gauche
+                rotation_right(&(*ptree)->right);
+                rotation_left(ptree);
+            }
+        }
+    }
 }
 
 // Fonction pour insérer un nœud
@@ -366,52 +391,6 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
 
     return tree;
 }
-static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *), void (*delete)(void *)) {
-    Tree tree = *ptree;
 
-    if (tree == NULL) {
-        return NULL; // Le nœud à supprimer n'existe pas, retourne NULL.
-    }
 
-    int C = compare(data, tree->data);
 
-    if (C < 0) {
-        tree->left = _tree_remove(&tree->left, data, size, compare, delete);
-    } else if (C > 0) {
-        tree->right = _tree_remove(&tree->right, data, size, compare, delete);
-    } else {
-        // Le nœud à supprimer a été trouvé
-        if (tree->left == NULL) {
-            Tree temp = tree->right;
-            if (delete) {
-                delete(tree->data);
-            }
-            free(tree);
-            tree = temp;
-        } else if (tree->right == NULL) {
-            Tree temp = tree->left;
-            if (delete) {
-                delete(tree->data);
-            }
-            free(tree);
-            tree = temp;
-        } else {
-            // Cas où le nœud a deux sous-arbres
-            Tree temp = tree_min(tree->right); // Trouver le nœud successeur
-            memcpy(tree->data, temp->data, size);
-            tree->right = _tree_remove(&tree->right, temp->data, size, compare, delete);
-        }
-    }
-
-    if (tree == NULL) {
-        return NULL; // Si l'arbre est devenu vide, retourne NULL
-    }
-
-    // Met à jour le facteur d'équilibre
-    tree->balance = tree_height(tree->left) - tree_height(tree->right);
-
-    // Équilibrer l'arbre
-    balance(ptree);
-
-    return tree;
-}
