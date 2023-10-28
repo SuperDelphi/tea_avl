@@ -64,8 +64,23 @@ int tree_sort(void *array,
               int (*compare)(const void *, const void
               *));
 
-// TESTS
+// Ajout fonctions du TEA
+void rotation_left(Tree *tree);
 
-void rotation_left_delphi(Tree *tree);
+void rotation_right(Tree *tree);
 
+void balance(Tree *ptree);
+
+Tree tree_insert(Tree *ptree,
+                 const void *data,
+                 size_t size,
+                 int (*compare)(const void *, const void *));
+
+Tree tree_min(Tree tree);
+
+static Tree _tree_remove(Tree *ptree,
+                         const void *data,
+                         size_t size,
+                         int (*compare)(const void *, const void *),
+                         void (*delete)(void *));
 #endif

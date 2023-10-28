@@ -246,10 +246,6 @@ void rotation_right(Tree tree) {
 // Fonction pour équilibrer un nœud
 // Déclarez 'data' dans la fonction 'balance'.
 
-
-
-
-
 // Fonction pour équilibrer un nœud
 void balance(Tree *ptree) {
     if (*ptree) {
@@ -308,8 +304,6 @@ Tree tree_insert(Tree *ptree, const void *data, size_t size, int (*compare)(cons
 
     return *ptree;
 }
-
-
 
 Tree tree_min(Tree tree) {
     if (tree == NULL) {
