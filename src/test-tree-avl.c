@@ -8,12 +8,30 @@ void monPrintF (void * a, void * b){
     printf("Valeur du noeud : %d\n", *(int*)a);
 }
 
+int compare(const void *data1, const void *data2) {
+
+    int value1 = *((int *)data1);
+    int value2 = *((int *)data2);
+
+    if (value1 < value2) {
+        return -1;
+    } else if (value1 > value2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void delete(void *data){
+    free(data);
+}
+
 /**
  * Test réalisés pour les arbres binaires
  * Affichage des résultats des tris
  */
-void testArbresBinaires(void){
-    int i = 5, j = 10, k = 15, m = 20;
+void testArbresAVL(void){
+    int i = 5, j = 10, k = 15, m = 20, l = 25;
     size_t sizeInt = sizeof(int);
 
     Tree racine = tree_create(&i, sizeInt);
@@ -29,27 +47,28 @@ void testArbresBinaires(void){
     tree_set_left(fils1, fils1fils1);
     tree_set_right(fils1, fils2fils1);
 
-    printf("Tri pre-order : \n");
-    tree_pre_order(racine, monPrintF, NULL);
-
-    printf("\nTri post-order : \n");
-    tree_post_order(racine, monPrintF, NULL);
-
     printf("\nTri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
 
-    printf("\nRotation gauche...\n");
-    rotation_left_delphi(&racine);
-    printf("\nNouveau tri in-order : \n");
-    tree_pre_order(racine, monPrintF, NULL);
+    printf("\nAjout d'un nouveau fils\n");
+    tree_insert(&fils1fils1, &l, sizeInt, compare);
 
-    // Les données sont sur le stack (variables locales i, j, k, m).
-    // Pas besoin d'appeler free donc pointeur nul.
-    tree_delete(racine, 0);
+    printf("\nNouveau tri in-order : \n");
+    tree_in_order(racine, monPrintF, NULL);
+
+    printf("\nAffichage du nouveau fils par recherche : \n");
+    tree_search(racine, &l, NULL);
+
+    printf("\nSuppression d'un fils\n");
+    _tree_remove(&fils2, &k, sizeInt, compare, delete);
+
+    printf("\nNouveau tri in-order : \n");
+    tree_in_order(racine, monPrintF, NULL);
+
 }
 
 int main(){
-    testArbresBinaires();
+    testArbresAVL();
 
     return EXIT_SUCCESS;
 }

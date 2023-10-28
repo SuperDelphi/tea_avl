@@ -65,6 +65,8 @@ int tree_sort(void *array,
               *));
 
 // Ajout fonctions du TEA
+int compare(const void *data1, const void *data2);
+
 void rotation_left(Tree *tree);
 
 void rotation_right(Tree *tree);

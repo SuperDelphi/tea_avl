@@ -78,20 +78,6 @@ size) {
     } else
         return false;
 }
-int compare(const void *data1, const void *data2) {
-    
-    int value1 = *((int *)data1);
-    int value2 = *((int *)data2);
-
-    if (value1 < value2) {
-        return -1;
-    } else if (value1 > value2) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
 
 void tree_pre_order(Tree tree,
                     void (*func)(void *, void *),
@@ -222,6 +208,21 @@ int tree_sort(void *array,
 }
 
 // Fonctions ajoutées pour le TEA.
+
+int compare(const void *data1, const void *data2) {
+
+    int value1 = *((int *)data1);
+    int value2 = *((int *)data2);
+
+    if (value1 < value2) {
+        return -1;
+    } else if (value1 > value2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 void rotation_left(Tree tree) {
     Tree newParent = tree->left;
     Tree children = newParent->right;
@@ -243,7 +244,7 @@ void rotation_right(Tree tree) {
     tree->balance = tree_height(tree->left) - tree_height(tree->right);
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
-// Fonction pour équilibrer un nœud
+
 // Déclarez 'data' dans la fonction 'balance'.
 
 // Fonction pour équilibrer un nœud
