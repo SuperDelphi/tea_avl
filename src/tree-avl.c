@@ -108,14 +108,13 @@ void tree_post_order(Tree tree,
         func(tree->data, extra_data);
     }
 }
+
 size_t tree_height(Tree tree){
   if (tree)
     return 1 + MAX(tree_height(tree->left), tree_height(tree->right));
   else
     return 0;
 }
-
-
 
 size_t tree_size(Tree tree) {
     if (tree)
@@ -157,16 +156,20 @@ void *tree_search(Tree tree,
     if (tree) {
         switch (compare(data, tree->data)) {
             case -1:
+                printf("\nGAUCHE...\n");
                 return tree_search(tree->left, data, compare);
             case 0:
+                printf("\nC'EST TOI...\n");
                 return tree->data;
             case 1:
+                printf("\nDROITE...\n");
                 return tree_search(tree->right, data, compare);
             default:
                 return NULL; // RAJOUTE PARCE QUE WARNING !!!
         }
-    } else
+    } else {
         return NULL;
+    }
 }
 
 static void set(void *data, void *array) {
@@ -257,21 +260,21 @@ void balance(Tree *ptree) {
             // Déséquilibre à gauche
             if (compare(data, (*ptree)->left->data) < 0) {
                 // Rotation simple à droite
-                rotation_right(ptree);
+                rotation_right(*ptree);
             } else {
                 // Rotation double à gauche-droite
-                rotation_left(&(*ptree)->left);
-                rotation_right(ptree);
+                rotation_left((*ptree)->left);
+                rotation_right(*ptree);
             }
         } else if (balance < -1) {
             // Déséquilibre à droite
             if (compare(data, (*ptree)->right->data) > 0) {
                 // Rotation simple à gauche
-                rotation_left(ptree);
+                rotation_left(*ptree);
             } else {
                 // Rotation double à droite-gauche
-                rotation_right(&(*ptree)->right);
-                rotation_left(ptree);
+                rotation_right((*ptree)->right);
+                rotation_left(*ptree);
             }
         }
     }
@@ -318,7 +321,7 @@ Tree tree_min(Tree tree) {
     return tree;
 }
 
-static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *), void (*delete)(void *)) {
+Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *), void (*delete)(void *)) {
     Tree tree = *ptree;
 
     if (tree == NULL) {
@@ -335,20 +338,25 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
         // Le nœud à supprimer a été trouvé
         if (tree->left == NULL) {
             Tree temp = tree->right;
+
             if (delete) {
                 delete(tree->data);
             }
+
             free(tree);
             tree = temp;
         } else if (tree->right == NULL) {
             Tree temp = tree->left;
+
             if (delete) {
                 delete(tree->data);
             }
+
             free(tree);
             tree = temp;
         } else {
             // Cas où le nœud a deux sous-arbres
+
             Tree temp = tree_min(tree->right); // Trouver le nœud successeur
             memcpy(tree->data, temp->data, size);
             tree->right = _tree_remove(&tree->right, temp->data, size, compare, delete);
@@ -386,6 +394,3 @@ static Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compa
 
     return tree;
 }
-
-
-

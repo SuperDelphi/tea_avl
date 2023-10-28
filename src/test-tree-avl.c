@@ -57,7 +57,7 @@ void testArbresAVL(void){
     tree_in_order(racine, monPrintF, NULL);
 
     printf("\nAffichage du nouveau fils par recherche : \n");
-    tree_search(racine, &l, NULL);
+    tree_search(racine, &l, compare);
 
     printf("\nSuppression d'un fils\n");
     _tree_remove(&fils2, &k, sizeInt, compare, delete);
