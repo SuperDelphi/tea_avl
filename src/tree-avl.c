@@ -26,6 +26,7 @@ Tree tree_create(const void *data, size_t size) {
     if (tree) {
         tree->left = NULL;
         tree->right = NULL;
+        tree->parent = NULL;
         memcpy(tree->data, data, size);
         tree->balance = 0;
     }
@@ -57,6 +58,7 @@ void *tree_get_data(Tree tree) {
 bool tree_set_left(Tree tree, Tree left) {
     if (tree) {
         tree->left = left;
+        left->parent = tree;
         return true;
     } else
         return false;
@@ -65,6 +67,7 @@ bool tree_set_left(Tree tree, Tree left) {
 bool tree_set_right(Tree tree, Tree right) {
     if (tree) {
         tree->right = right;
+        right->parent = tree;
         return true;
     } else
         return false;

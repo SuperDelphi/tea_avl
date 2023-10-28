@@ -9,6 +9,7 @@ typedef struct _TreeNode *Tree;
 struct _TreeNode {
     Tree left;
     Tree right;
+    Tree parent;
     char data[1];
     size_t balance;
 };
