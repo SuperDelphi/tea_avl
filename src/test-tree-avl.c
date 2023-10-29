@@ -51,7 +51,8 @@ void testArbresAVL(void) {
     tree_in_order(racine, monPrintF, NULL);
 
     printf("\nAjout d'un nouveau fils\n");
-    tree_insert(&fils2, &n, sizeInt, compare);
+    Tree fils2fils2 = tree_insert(&fils2, &n, sizeInt, compare)->right;
+//    printf("\nFils 2 du fils 2 : %d (Parent : %d)\n", *fils2fils2->data, *fils2fils2->parent->data);
 
     printf("\nNouveau tri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
@@ -66,7 +67,7 @@ void testArbresAVL(void) {
     tree_in_order(racine, monPrintF, NULL);
 }
 
-int main(){
+int main() {
     testArbresAVL();
 
     return EXIT_SUCCESS;
