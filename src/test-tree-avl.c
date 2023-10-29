@@ -106,7 +106,7 @@ void generateRandTests(int iterations) {
         tree_insert(&racine, &randomValue, sizeInt, compare);
         end = clock();
 
-        insDuration += ((double) (end - start));
+        insDuration = ((double) (end - start));
 
         insertions[i] = insDuration;
 
@@ -118,7 +118,7 @@ void generateRandTests(int iterations) {
         tree_search(racine, &randomValue, compare);
         end = clock();
 
-        seaDuration += ((double) (end - start)) / CLOCKS_PER_SEC;
+        seaDuration = ((double) (end - start)) / CLOCKS_PER_SEC;
 
         searches[i] = seaDuration;
 
@@ -130,24 +130,24 @@ void generateRandTests(int iterations) {
         _tree_remove(&racine, &randomValue, sizeInt, compare, NULL);
         end = clock();
 
-        remDuration += ((double) (end - start)) / CLOCKS_PER_SEC;
+        remDuration = ((double) (end - start)) / CLOCKS_PER_SEC;
 
         removals[i] = remDuration;
     }
 
     // ADDING RESULTS
 
-    fprintf(file, "# Insertions\n");
-    for (int i = 0; i < iterations; i++) {
-        fprintf(file, "%d %f\n", i, insertions[i]);
-    }
+//    fprintf(file, "# Insertions\n");
+//    for (int i = 0; i < iterations; i++) {
+//        fprintf(file, "%d %f\n", i, insertions[i]);
+//    }
+//
+//    fprintf(file, "\n");
 
-    fprintf(file, "\n");
-
-    fprintf(file, "# Searches\n");
-    for (int i = 0; i < iterations; i++) {
-        fprintf(file, "%d %f\n", i, searches[i]);
-    }
+//    fprintf(file, "# Searches\n");
+//    for (int i = 0; i < iterations; i++) {
+//        fprintf(file, "%d %f\n", i, searches[i]);
+//    }
 
     fprintf(file, "\n");
 
