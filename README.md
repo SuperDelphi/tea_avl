@@ -28,3 +28,21 @@ TODO:
 - [ ] Insert function
 - [ ] Delete function
 - [ ] Search function
+
+# Black & Red tree
+
+The src file is used in the same way as the original src for the AVL tree.
+
+## Installing in Linux/WSL for BR Tree
+```bash
+mkdir debug
+cd tea_avl/debug
+cmake ../src_br/ -DCAME_INSTALL_PREXIX=../tmp -DCMAKE_BUILD-TYPE=Debug
+make
+```
+
+## Running the test file
+In the debug file
+```bash
+./test-tree-br
+```
