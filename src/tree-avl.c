@@ -5,11 +5,17 @@
 #include <stdbool.h>
 #include "tree-avl.h"
 #include "min-max.h"
-/*--------------------------------------------------------------------*/
+
+/*
+ * Retourne un nouvel arbre vide.
+ */
 Tree tree_new() {
     return NULL;
 }
 
+/*
+ * Supprime l'arbre passé en paramètre.
+ */
 void tree_delete(Tree tree, void (*delete)(void *)) {
     if (tree) {
         tree_delete(tree->left, delete);
@@ -20,6 +26,9 @@ void tree_delete(Tree tree, void (*delete)(void *)) {
     }
 }
 
+/*
+ * Crée un arbre avec une valeur passée en paramètre.
+ */
 Tree tree_create(const void *data, size_t size) {
     Tree tree = (Tree) malloc(3 * sizeof(Tree) + size + sizeof(size_t));
 
@@ -34,6 +43,9 @@ Tree tree_create(const void *data, size_t size) {
     return tree;
 }
 
+/*
+ * Retourne le fils gauche de l'arbre passé en paramètre.
+ */
 Tree tree_get_left(Tree tree) {
     if (tree)
         return tree->left;
@@ -41,6 +53,9 @@ Tree tree_get_left(Tree tree) {
         return NULL;
 }
 
+/*
+ * Retourne le fils droit de l'arbre passé en paramètre.
+ */
 Tree tree_get_right(Tree tree) {
     if (tree)
         return tree->right;
@@ -48,6 +63,9 @@ Tree tree_get_right(Tree tree) {
         return NULL;
 }
 
+/*
+ * Retourne la valeur du nœud passé en paramètre.
+ */
 void *tree_get_data(Tree tree) {
     if (tree)
         return tree->data;
@@ -55,6 +73,9 @@ void *tree_get_data(Tree tree) {
         return NULL;
 }
 
+/*
+ * Définit le fils gauche de l'arbre passé en paramètre.
+ */
 bool tree_set_left(Tree tree, Tree left) {
     if (tree) {
         tree->left = left;
@@ -64,6 +85,9 @@ bool tree_set_left(Tree tree, Tree left) {
         return false;
 }
 
+/*
+ * Définit le fils droit de l'arbre passé en paramètre.
+ */
 bool tree_set_right(Tree tree, Tree right) {
     if (tree) {
         tree->right = right;
@@ -73,6 +97,9 @@ bool tree_set_right(Tree tree, Tree right) {
         return false;
 }
 
+/*
+ * Redéfinit la valeur du nœud passé en paramètre.
+ */
 bool tree_set_data(Tree tree, const void *data, size_t
 size) {
     if (tree) {
@@ -82,6 +109,9 @@ size) {
         return false;
 }
 
+/*
+ * Parcours l'arbre passé en paramètre en mode VGD.
+ */
 void tree_pre_order(Tree tree,
                     void (*func)(void *, void *),
                     void *extra_data) {
@@ -92,6 +122,9 @@ void tree_pre_order(Tree tree,
     }
 }
 
+/*
+ * Parcours l'arbre passé en paramètre en mode GVD.
+ */
 void tree_in_order(Tree tree,
                    void (*func)(void *, void *),
                    void *extra_data) {
@@ -102,6 +135,9 @@ void tree_in_order(Tree tree,
     }
 }
 
+/*
+ * Parcours l'arbre passé en paramètre en mode GDV.
+ */
 void tree_post_order(Tree tree,
                      void (*func)(void *, void *),
                      void *extra_data) {
@@ -112,6 +148,9 @@ void tree_post_order(Tree tree,
     }
 }
 
+/*
+ * Retourne la hauteur (maximale) de l'arbre passé en paramètre.
+ */
 size_t tree_height(Tree tree){
   if (tree)
     return 1 + MAX(tree_height(tree->left), tree_height(tree->right));
@@ -119,6 +158,9 @@ size_t tree_height(Tree tree){
     return 0;
 }
 
+/*
+ * Retourne le nombre de nœuds de l'arbre passé en paramètre.
+ */
 size_t tree_size(Tree tree) {
     if (tree)
         return 1 + tree_size(tree->left) + tree_size
@@ -127,7 +169,10 @@ size_t tree_size(Tree tree) {
         return 0;
 }
 
-// ONLY used by tree_sort(). See tree_insert() for common insertions.
+/*
+ * (NE PAS CONSIDÉRER. UNIQUEMENT utilisé par tree_sort(). Voir tree_insert() pour les insertions réellement effectuées.)
+ * Insère une valeur dans l'arbre passé en paramètre, de manière triée.
+ */
 bool tree_insert_sorted(Tree *ptree,
                         const void *data,
                         size_t size,
@@ -153,6 +198,9 @@ bool tree_insert_sorted(Tree *ptree,
 
 }
 
+/*
+ * Retourne le nœud dont la valeur correspond à celle passée en paramètre, sinon NULL.
+ */
 void *tree_search(Tree tree,
                   const void *data,
                   int (*compare)(const void *, const void
@@ -173,6 +221,10 @@ void *tree_search(Tree tree,
     }
 }
 
+/*
+ * (NE PAS CONSIDÉRER)
+ * (Utilisée par tree_sort)
+ */
 static void set(void *data, void *array) {
     static size_t size;
     static size_t offset;
@@ -186,6 +238,10 @@ static void set(void *data, void *array) {
     }
 }
 
+/*
+ * (NE PAS CONSIDÉRER)
+ * Crée un arbre trié à partir d'un tableau de valeurs.
+ */
 int tree_sort(void *array,
               size_t length,
               size_t size,
@@ -211,6 +267,9 @@ int tree_sort(void *array,
     return true;
 }
 
+/*
+ * Effectue une rotation à gauche de l'arbre passé en paramètre.
+ */
 void rotation_left(Tree tree) {
     if (tree->right == NULL) return;
 
@@ -234,6 +293,9 @@ void rotation_left(Tree tree) {
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
 
+/*
+ * Effectue une rotation à droite de l'arbre passé en paramètre.
+ */
 void rotation_right(Tree tree) {
     if (tree->left == NULL) return;
 
@@ -257,7 +319,9 @@ void rotation_right(Tree tree) {
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
 
-// Fonction pour équilibrer un nœud
+/*
+ * Équilibre l'arbre passé en paramètre (si nécessaire).
+ */
 void balance(Tree *ptree) {
     if (*ptree) {
         const void *data = (*ptree)->data; // Déclarer et initialiser data avec la valeur du nœud
@@ -287,7 +351,9 @@ void balance(Tree *ptree) {
     }
 }
 
-// Fonction pour insérer un nœud
+/*
+ * Insère une valeur dans l'arbre passé en paramètre, tout en conservant les propriétés d'un arbre AVL.
+ */
 Tree tree_insert(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *)) {
     if (*ptree == NULL) {
         // Créez un nouveau nœud pour contenir les données.
@@ -319,6 +385,9 @@ Tree tree_insert(Tree *ptree, const void *data, size_t size, int (*compare)(cons
     return *ptree;
 }
 
+/*
+ * Retourne la valeur minimum de l'arbre passé en paramètre.
+ */
 Tree tree_min(Tree tree) {
     if (tree == NULL) {
         return NULL;
@@ -331,6 +400,9 @@ Tree tree_min(Tree tree) {
     return tree;
 }
 
+/*
+ * Supprime le nœud dont la valeur correspond à celle passée en paramètre (s'il existe), tout en conservant les propriétés d'un arbre AVL.
+ */
 Tree _tree_remove(Tree *ptree, const void *data, size_t size, int (*compare)(const void *, const void *), void (*delete)(void *)) {
     Tree tree = *ptree;
 
