@@ -127,6 +127,7 @@ size_t tree_size(Tree tree) {
         return 0;
 }
 
+// ONLY used by tree_sort(). See tree_insert() for common insertions.
 bool tree_insert_sorted(Tree *ptree,
                         const void *data,
                         size_t size,

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <assert.h>
+#include <time.h>
 
 #include "tree-avl.h"
 
@@ -54,6 +54,8 @@ void testArbresAVL(void) {
     Tree fils2fils2 = tree_insert(&fils2, &n, sizeInt, compare)->right;
 //    printf("\nFils 2 du fils 2 : %d (Parent : %d)\n", *fils2fils2->data, *fils2fils2->parent->data);
 
+    rotation_right(fils1);
+
     printf("\nNouveau tri in-order : \n");
     tree_in_order(racine, monPrintF, NULL);
 
@@ -67,8 +69,99 @@ void testArbresAVL(void) {
     tree_in_order(racine, monPrintF, NULL);
 }
 
+void generateRandTests(int iterations) {
+    // File handling
+
+    FILE *file;
+    file = fopen("output_avl.txt", "w");
+
+    if (file == NULL) {
+        printf("File couldn't be created.\n");
+        return;
+    }
+
+    // Results
+
+    double insertions[iterations];
+    double searches[iterations];
+    double removals[iterations];
+
+    size_t sizeInt = sizeof(int);
+    srand(time(NULL));
+
+    int firstRandomValue = rand();
+    Tree racine = tree_create(&firstRandomValue, sizeInt);
+
+    clock_t start, end;
+    double duration;
+
+    for (int i = 0; i < iterations; i++) {
+        int randomValue = rand();
+
+        // INSERTION
+
+        start = clock();
+        tree_insert(&racine, &randomValue, sizeInt, compare);
+        end = clock();
+
+        duration = ((double) (end - start));
+
+        insertions[i] = duration;
+
+        // SEARCH
+
+        randomValue = rand();
+
+        start = clock();
+        tree_search(racine, &randomValue, compare);
+        end = clock();
+
+        duration = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+        searches[i] = duration;
+
+        // REMOVAL
+
+        randomValue = rand();
+
+        start = clock();
+        _tree_remove(&racine, &randomValue, sizeInt, compare, NULL);
+        end = clock();
+
+        duration = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+        removals[i] = duration;
+    }
+
+    // ADDING RESULTS
+
+    fprintf(file, "# Insertions\n");
+    for (int i = 0; i < iterations; i++) {
+        fprintf(file, "%d %f\n", i, insertions[i]);
+    }
+
+    fprintf(file, "\n");
+
+    fprintf(file, "# Searches\n");
+    for (int i = 0; i < iterations; i++) {
+        fprintf(file, "%d %f\n", i, searches[i]);
+    }
+
+    fprintf(file, "\n");
+
+    fprintf(file, "# Removals\n");
+    for (int i = 0; i < iterations; i++) {
+        fprintf(file, "%d %f\n", i, removals[i]);
+    }
+
+    fprintf(file, "\n");
+
+    fclose(file);
+}
+
 int main() {
     testArbresAVL();
+    generateRandTests(80000);
 
     return EXIT_SUCCESS;
 }

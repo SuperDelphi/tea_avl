@@ -49,10 +49,10 @@ size_t tree_height(Tree tree);
 
 size_t tree_size(Tree tree);
 
-bool tree_insert_sorted(Tree *ptree,
-                        const void *data,
-                        size_t size,
-                        int (*compare)(const void *, const void *));
+//bool tree_insert_sorted(Tree *ptree,
+//                        const void *data,
+//                        size_t size,
+//                        int (*compare)(const void *, const void *));
 
 void *tree_search(Tree tree,
                   const void *data,
