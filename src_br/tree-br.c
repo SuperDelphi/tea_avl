@@ -208,34 +208,37 @@ int tree_sort(void *array,
 
 //Fonctions ajoutées pour le TEA.
 
-
+//Fonction de rotation à gauche
 Tree rotate_left(Tree node) {
     if (!node) {
         return node;
     }
 
-    // Rotate right on the right subtree.
+    // Rotation à droite sur le sous-arbre
     if (node->right) {
         node->right = rotate_right(&node->right);
     }
 
-    // Rotate left on the original node.
+    // Rotation à gauche sur le noeud original
     return rotate_left(&node);
 }
+
+//Fonction de rotation à droite
 Tree rotate_right(Tree node) {
     if (!node) {
         return node;
     }
 
-    // Rotate left on the left subtree.
+    // Rotation gauche sur le sous-arbre.
     if (node->left) {
         node->left = rotate_left(&node->left);
     }
 
-    // Rotate right on the original node.
+    // Rotation droite sur le noeud original
     return rotate_right(node);
 }
 
+//Fonction qui retourne le parent du noeud actuel
 Tree tree_get_parent(Tree tree){
     if (tree)
         return tree->parent;
@@ -243,6 +246,7 @@ Tree tree_get_parent(Tree tree){
         return NULL;
 }
 
+//Fonction qui retourne le grand-parent du noeud actuel
 Tree tree_get_grandparent(Tree tree){
     //If the tree exists and the current node has a parent, then return the grandparent (parent of the parent).
     if ((tree != NULL) && (tree->parent != NULL))
@@ -251,6 +255,7 @@ Tree tree_get_grandparent(Tree tree){
         return NULL;
 }
 
+//Fonction qui retourne l'oncle du noeud actuel
 Tree tree_get_uncle(Tree tree){
     Tree grandparent = tree_get_grandparent(tree);
     //If there is no parent of parent, return NULL
@@ -264,6 +269,7 @@ Tree tree_get_uncle(Tree tree){
     }
 }
 
+//Fonction qui retourne le père du noeud actuel
 Tree tree_get_father(Tree tree){
     if (tree)
         //If the tree exists, return its parent
@@ -272,6 +278,7 @@ Tree tree_get_father(Tree tree){
         return NULL;
 }
 
+//Fonction qui attribue un père au noeud actuel
 bool tree_set_father (Tree tree, Tree parent){
     if (tree)
     {
@@ -282,8 +289,9 @@ bool tree_set_father (Tree tree, Tree parent){
         return false;
 }
 
+//Fonction qui retourne la racine du noeud actuel
 Tree tree_get_root(Tree tree){
-    //If the father (parent) of the node is null, then return the root of the tree, if it's not, it is done again until reaching the top.
+    //Si le parent ou noeud est nul, alors retourne la racine, si ce n'est pas encore bon, on relance jusqu'à trouvé la racine.
     if(tree_get_father(tree) == NULL){
         return tree;
     }else{
@@ -291,12 +299,11 @@ Tree tree_get_root(Tree tree){
     }
 }
 
-//Insert and it's many cases
+//Fonction d'insertion et tout les cas différents
 void insert(Tree tree, const void * data){
 
     if ((*(int*)data) < *(int*)tree_get_data(tree)){
-        /*The data will be inserted into the tree according to five cases,
-         each being a condition of insertion depending on the state of the tree.*/
+        /*La données sera insérée selon 5 cas différents par rapport à l'éat de l'arbre.*/
         if (tree_get_left(tree) == NULL){
             Tree leftTree = tree_create(data, sizeof(data));
 
@@ -322,7 +329,7 @@ void insert(Tree tree, const void * data){
 }
 
 void insert_case1(Tree ptree){
-    //If the tree has no parent, then it is the root and must be colored Black.
+    //Si le noeud n'a pas de parent alors il est racine, et donc on le met Noir.
     if(ptree->parent == NULL)
         ptree->color = Black;
     else
@@ -330,7 +337,7 @@ void insert_case1(Tree ptree){
 }
 
 void insert_case2(Tree ptree){
-    //If the parent's color is black, then the child is colored Black as well.
+    //Si le père est Noir alors l'enfant sera Noir aussi.
     if((ptree)->parent->color == Black)
         return;
     else
@@ -340,7 +347,7 @@ void insert_case2(Tree ptree){
 void insert_case3(Tree ptree){
     Tree uncle = tree_get_uncle(ptree);
     Tree grandparent;
-    //If the uncle isn't NULL and the uncle is colored Red, then the parent of ptree is colored Black and its grandparent is colored Red.
+    //Si l'oncle n'est pas nulle e rouge, alors son père est Noir et son grand-père Rouge.
     if((uncle != NULL) && (uncle->color == Red)){
         ptree->parent->color = Black;
         uncle->color = Black;
@@ -380,8 +387,7 @@ void insert_case5(Tree ptree){
 
 }
 
-//Delete
-
+//Fonction pour trouver le plus petit noeud
 Tree tree_find_min(Tree tree){
     if (tree == NULL)
         return NULL;
@@ -391,6 +397,7 @@ Tree tree_find_min(Tree tree){
         return tree_find_min(tree_get_left(tree));
 }
 
+//Fonction pour trouver le plus grand noeud
 Tree tree_find_max(Tree tree){
     if (tree == NULL)
         return NULL;
@@ -400,12 +407,13 @@ Tree tree_find_max(Tree tree){
         return tree_find_max(tree_get_right(tree));
 }
 
+//Fonction de suppression d'un noeud
 void * delete(Tree tree){
     if (tree == NULL)
         return NULL;
-    //Check if it's a node.
+    //Check si c'est un noeud
     if (tree_get_left(tree) == NULL && tree_get_right(tree) == NULL){
-        //Check if it's not the root
+        //Check si il n'est pas racine
         if (tree_get_father(tree) != NULL){
             if (tree_get_father(tree)->left == tree){
                 tree_set_left(tree_get_father(tree), NULL);
@@ -414,13 +422,13 @@ void * delete(Tree tree){
                 tree_set_right(tree_get_father(tree), NULL);
             }
         }
-        //Delete node
+        //Supprime le noeud
         tree_delete(tree, 0);
         return NULL;
 
-        //Check if node has a right child
+        //Check si le noeud à un enfant droit
     }else if (tree_get_left(tree) == NULL){
-        //Check if it's not root
+        //Check si il n'est pas racine
         if (tree_get_father(tree) != NULL){
             if (tree_get_father(tree)->left == tree){
                 tree_set_left(tree_get_father(tree), tree_get_right(tree));
@@ -428,7 +436,7 @@ void * delete(Tree tree){
                 tree_set_right(tree_get_father(tree), tree_get_right(tree));
             }
         }
-        //Delete node
+        //Supprime le noeud
         tree_delete(tree, 0);
         return NULL;
 
