@@ -211,28 +211,50 @@ int tree_sort(void *array,
 }
 
 void rotation_left(Tree tree) {
-    Tree newParent = tree->left;
-    Tree children = newParent->right;
+    if (tree->right == NULL) return;
 
-    newParent->right = tree;
-    tree->left = children;
+    Tree treeParent = tree->parent;
+    Tree newParent = tree->right;
+    Tree children = tree;
+
+    if (treeParent) {
+        if (compare(tree->data, treeParent->data) > 0) {
+            treeParent->right = newParent;
+        } else {
+            treeParent->left = newParent;
+        }
+    }
+
+    newParent->left = children;
+    children->parent = newParent;
+    children->right = NULL;
 
     tree->balance = tree_height(tree->left) - tree_height(tree->right);
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
 
 void rotation_right(Tree tree) {
-    Tree newParent = tree->right;
-    Tree children = newParent->left;
+    if (tree->left == NULL) return;
 
-    newParent->left = tree;
-    tree->right = children;
+    Tree treeParent = tree->parent;
+    Tree newParent = tree->left;
+    Tree children = tree;
+
+    if (treeParent) {
+        if (compare(tree->data, treeParent->data) > 0) {
+            treeParent->right = newParent;
+        } else {
+            treeParent->left = newParent;
+        }
+    }
+
+    newParent->right = children;
+    children->parent = newParent;
+    children->left = NULL;
 
     tree->balance = tree_height(tree->left) - tree_height(tree->right);
     newParent->balance = tree_height(newParent->left) - tree_height(newParent->right);
 }
-
-// Déclarez 'data' dans la fonction 'balance'.
 
 // Fonction pour équilibrer un nœud
 void balance(Tree *ptree) {
