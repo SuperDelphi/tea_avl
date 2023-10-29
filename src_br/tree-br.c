@@ -244,6 +244,7 @@ Tree tree_get_parent(Tree tree){
 }
 
 Tree tree_get_grandparent(Tree tree){
+    //If the tree exists and the current node has a parent, then return the grandparent (parent of the parent).
     if ((tree != NULL) && (tree->parent != NULL))
         return tree->parent->parent;
     else
@@ -252,8 +253,10 @@ Tree tree_get_grandparent(Tree tree){
 
 Tree tree_get_uncle(Tree tree){
     Tree grandparent = tree_get_grandparent(tree);
+    //If there is no parent of parent, return NULL
     if (grandparent == NULL)
         return NULL;
+    //If the grandparent has an uncle (different node on the same "row" of the parent), return it if it's on the left or the right.
     if (tree->parent == grandparent->left){
         return grandparent->right;
     }else{
@@ -261,16 +264,15 @@ Tree tree_get_uncle(Tree tree){
     }
 }
 
-Tree tree_get_father(Tree tree)
-{
+Tree tree_get_father(Tree tree){
     if (tree)
+        //If the tree exists, return its parent
         return tree->parent;
     else
         return NULL;
 }
 
-bool tree_set_father (Tree tree, Tree parent)
-{
+bool tree_set_father (Tree tree, Tree parent){
     if (tree)
     {
         tree->parent = parent;
@@ -281,6 +283,7 @@ bool tree_set_father (Tree tree, Tree parent)
 }
 
 Tree tree_get_root(Tree tree){
+    //If the father (parent) of the node is null, then return the root of the tree, if it's not, it is done again until reaching the top.
     if(tree_get_father(tree) == NULL){
         return tree;
     }else{
@@ -289,11 +292,11 @@ Tree tree_get_root(Tree tree){
 }
 
 //Insert and it's many cases
-
 void insert(Tree tree, const void * data){
 
     if ((*(int*)data) < *(int*)tree_get_data(tree)){
-
+        /*The data will be inserted into the tree according to five cases,
+         each being a condition of insertion depending on the state of the tree.*/
         if (tree_get_left(tree) == NULL){
             Tree leftTree = tree_create(data, sizeof(data));
 
@@ -301,12 +304,10 @@ void insert(Tree tree, const void * data){
             tree_set_parent(leftTree, tree);
 
             insert_case1(leftTree);
-        }
-        else{
+        }else{
             insert(tree_get_left(tree), data);
         }
-    }
-    else{
+    }else{
         if (tree_get_right(tree) == NULL){
             Tree rightTree = tree_create(data, sizeof(data));
 
@@ -314,14 +315,14 @@ void insert(Tree tree, const void * data){
             tree_set_parent(rightTree, tree);
 
             insert_case1(rightTree);
-        }
-        else{
+        }else{
             insert(tree_get_right(tree), data);
         }
     }
 }
 
 void insert_case1(Tree ptree){
+    //If the tree has no parent, then it is the root and must be colored Black.
     if(ptree->parent == NULL)
         ptree->color = Black;
     else
@@ -329,6 +330,7 @@ void insert_case1(Tree ptree){
 }
 
 void insert_case2(Tree ptree){
+    //If the parent's color is black, then the child is colored Black as well.
     if((ptree)->parent->color == Black)
         return;
     else
@@ -338,7 +340,7 @@ void insert_case2(Tree ptree){
 void insert_case3(Tree ptree){
     Tree uncle = tree_get_uncle(ptree);
     Tree grandparent;
-
+    //If the uncle isn't NULL and the uncle is colored Red, then the parent of ptree is colored Black and its grandparent is colored Red.
     if((uncle != NULL) && (uncle->color == Red)){
         ptree->parent->color = Black;
         uncle->color = Black;
@@ -450,6 +452,6 @@ void * delete(Tree tree){
         tree_set_data(tree, tree_get_data(min), sizeof(int));
         tree_set_data(min, data, sizeof(int));
 
-        return supprimer(min);
+        return delete(min);
     }
 }
