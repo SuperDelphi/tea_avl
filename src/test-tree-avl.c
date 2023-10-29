@@ -93,7 +93,9 @@ void generateRandTests(int iterations) {
     Tree racine = tree_create(&firstRandomValue, sizeInt);
 
     clock_t start, end;
-    double duration;
+    double insDuration = 0;
+    double seaDuration = 0;
+    double remDuration = 0;
 
     for (int i = 0; i < iterations; i++) {
         int randomValue = rand();
@@ -104,9 +106,9 @@ void generateRandTests(int iterations) {
         tree_insert(&racine, &randomValue, sizeInt, compare);
         end = clock();
 
-        duration = ((double) (end - start));
+        insDuration += ((double) (end - start));
 
-        insertions[i] = duration;
+        insertions[i] = insDuration;
 
         // SEARCH
 
@@ -116,9 +118,9 @@ void generateRandTests(int iterations) {
         tree_search(racine, &randomValue, compare);
         end = clock();
 
-        duration = ((double) (end - start)) / CLOCKS_PER_SEC;
+        seaDuration += ((double) (end - start)) / CLOCKS_PER_SEC;
 
-        searches[i] = duration;
+        searches[i] = seaDuration;
 
         // REMOVAL
 
@@ -128,9 +130,9 @@ void generateRandTests(int iterations) {
         _tree_remove(&racine, &randomValue, sizeInt, compare, NULL);
         end = clock();
 
-        duration = ((double) (end - start)) / CLOCKS_PER_SEC;
+        remDuration += ((double) (end - start)) / CLOCKS_PER_SEC;
 
-        removals[i] = duration;
+        removals[i] = remDuration;
     }
 
     // ADDING RESULTS
